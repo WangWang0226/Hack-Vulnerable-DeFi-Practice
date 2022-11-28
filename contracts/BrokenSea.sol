@@ -15,7 +15,7 @@ contract BrokenSea_P {
     }
     mapping(address => Offer) offers;
 
-    //買 nft
+    // NFT buyer make an offer
     function createOffer(
         ERC721 erc721Token,
         uint256 erc721TokenId,
@@ -29,14 +29,13 @@ contract BrokenSea_P {
         offers[msg.sender]= offer;
     }
 
-    //正常設計：賣 nft
-    //漏洞：seller = attacker ，變成把 erc20 token 轉給買家，拿走買家的 nft
+    // NFT seller accept the offer
     function acceptOffer(
         address maker,
         ERC721 erc721Token,
-        uint erc721TokenId, //3
+        uint erc721TokenId,
         ERC20 erc20Token,
-        uint256 amount //1
+        uint256 amount
     )
         external
     {
@@ -46,6 +45,7 @@ contract BrokenSea_P {
         require(offer.amount != 0, "BrokenSea::fillBid/BID_PRICE_ZERO");
         require(offer.amount >= amount, "BrokenSea::fillBid/BID_TOO_LOW");
         require(offer.nftID == erc721TokenId, "BrokenSea::fillBid/WRONG_TOKEN_ID");
+        require(erc20Token.balanceOf(maker) >= amount, "BrokenSea::fillBid/BUYER_BALANCE_NOT_ENOUGH");
 
         delete offers[maker];
 
