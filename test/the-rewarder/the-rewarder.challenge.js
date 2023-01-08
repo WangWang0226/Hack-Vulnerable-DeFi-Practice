@@ -67,7 +67,7 @@ describe('[Challenge] The rewarder', function () {
     /**
      * Goal: claim most rewards then others
      * Bug: The pool is not checking for how long we have deposited our tokens to distribute a fair amount of token.
-     * Solution: Wait for a new round(5 days), flashloan a huge money, have them deposited in the reward pool, then withdraw, repay the money, claim rewards.
+     * Exploit: Wait for a new round(5 days), flashloan a huge money, have them deposited in the reward pool, then withdraw, repay the money, claim rewards.
      */
     it('Exploit', async function () {
         const factory = await ethers.getContractFactory("RewardEvilReceiver", attacker);

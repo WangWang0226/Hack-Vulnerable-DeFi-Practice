@@ -75,6 +75,10 @@ describe('[Challenge] Teamwork', function () {
         expect(
             await this.nft.ownerOf(1)
         ).to.equal(attacker.address);
+
+        // expect(
+        //     await this.token.balanceOf(victim.address)
+        // ).to.equal(ethers.utils.parseEther('3'));
     });
 
 });

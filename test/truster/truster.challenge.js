@@ -31,7 +31,7 @@ describe('[Challenge] Truster', function () {
     /**
      * Goal: Steal all the tokens from lending pool.
      * Bug: Lending pool will execute target.call{value: value}(data) by itself.
-     * Solution: We make pool call token.approve() to approve us transfer all DVT token in the pool to attack's contract.
+     * Exploit: We make pool call token.approve() to approve us transfer all DVT token in the pool to attack's contract.
      */
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */

@@ -45,7 +45,4 @@ contract RewardEvilReceiver is Ownable {
         flashLoanPool.flashLoan(balance);
     }
 
-    
-
-
 }

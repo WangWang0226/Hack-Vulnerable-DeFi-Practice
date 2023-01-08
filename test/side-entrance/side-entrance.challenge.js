@@ -27,7 +27,7 @@ describe('[Challenge] Side entrance', function () {
     /**
      * Goal: Steal all ether from lending pool
      * Bug: Pool does not check the deposit amount of borrower before and after flash loan. 
-     * Solution: borrow flash loan and deposit back to the pool, then withdraw all of them.
+     * Exploit: borrow flash loan and deposit back to the pool, then withdraw all of them.
      */
     it('Exploit', async function () {
         const factory = await ethers.getContractFactory('EvilReceiver', attacker);

@@ -42,7 +42,7 @@ describe('[Challenge] Unstoppable', function () {
      * Goal: Force the lending pool stop forever.
      * Bug: Lending pool require poolBalance == balanceBefore, 
      * they did not consider that anyone can transfer token into pool and make this condition fail.
-     * Solution: Transfer tokens into pool, make "poolBalance == balanceBefore" fail forever.
+     * Exploit: Transfer tokens into pool, make "poolBalance == balanceBefore" fail forever.
     */
     it('Exploit', async function () {
         await this.token.connect(attacker).transfer(this.pool.address, ethers.utils.parseEther('5'));
