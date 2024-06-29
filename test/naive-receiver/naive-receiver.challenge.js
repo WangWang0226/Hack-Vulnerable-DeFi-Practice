@@ -33,6 +33,8 @@ describe('[Challenge] Naive receiver', function () {
      * Goal: Drain all eth from the user's contract.
      * Bug: everyone can use the user's contract to execute flash loan. Make the user's contract pay the fee.
      * Exploit: It cost 1 eth for the fee every time we execute flash loan, so we make it execute 10 times.
+     * Note: To complete the attack in a single transaction, we should deploy a contract that initiates 10 flash loans. 
+     * This malicious contract should then be called from an off-chain source.
     */
     it('Exploit', async function () {
         for (let i = 0; i < 10; i++) {

