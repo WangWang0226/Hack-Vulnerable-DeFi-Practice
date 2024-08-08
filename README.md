@@ -1,17 +1,15 @@
 
-## Notes of my Solution and Thought
-[My notes of Damn-Vulnerable-DeFi practice](https://overjoyed-target-4c8.notion.site/Damn-Vulnerable-DeFi-68623017ed544e52a57c66ae221f812f)
-
----
+# Introduction
 ![](cover.png)
 
 **A set of challenges to learn offensive security of smart contracts in Ethereum.**
 
-Featuring flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more!
+This resource covers a wide range of topics, including flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more. It is based on the Damn Vulnerable DeFi V3 version. Curretly, 13 levels has been completed in this repository.
 
-## Play
+## Notes of my Solution and Thought
+For detailed notes on my practice with Damn Vulnerable DeFi, visit [My notes of Damn-Vulnerable-DeFi practice](https://overjoyed-target-4c8.notion.site/Damn-Vulnerable-DeFi-68623017ed544e52a57c66ae221f812f)
 
-Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
+Refer to [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz) for additional information. Please note that the website features the V4 version, which uses Foundry.
 
 ## Disclaimer
 
